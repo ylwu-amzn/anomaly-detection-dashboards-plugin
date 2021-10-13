@@ -51,6 +51,7 @@ export function formikToDetector(values: CreateDetectorFormikValues): Detector {
     name: values.name,
     description: values.description,
     indices: formikToIndices(values.index),
+    resultIndex: values.resultIndex,
     filterQuery: formikToFilterQuery(values),
     uiMetadata: {
       features: { ...featuresToUIMetadata(values.featureList) },

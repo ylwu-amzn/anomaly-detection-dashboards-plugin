@@ -52,6 +52,7 @@ import { BREADCRUMBS } from '../../../utils/constants';
 import { getErrorMessage, validateDetectorName } from '../../../utils/utils';
 import { NameAndDescription } from '../components/NameAndDescription';
 import { DataSource } from '../components/Datasource/DataSource';
+import { CustomResultIndex } from '../components/CustomResultIndex';
 import { Timestamp } from '../components/Timestamp';
 import { Settings } from '../components/Settings';
 import {
@@ -84,6 +85,7 @@ export const DefineDetector = (props: DefineDetectorProps) => {
   useHideSideNavBar(true, false);
   const detectorId: string = get(props, 'match.params.detectorId', '');
   const { detector, hasError } = useFetchDetectorInfo(detectorId);
+  // console.log("ylwudebug --------- detector on DefineDetector page ", detector);
   const [newIndexSelected, setNewIndexSelected] = useState<boolean>(false);
 
   // To handle backward compatibility, we need to pass some fields via
@@ -176,6 +178,7 @@ export const DefineDetector = (props: DefineDetectorProps) => {
       formikProps.setFieldTouched('name');
       formikProps.setFieldTouched('description');
       formikProps.setFieldTouched('index');
+      formikProps.setFieldTouched('resultIndex');
       formikProps.setFieldTouched('filters');
       formikProps.setFieldTouched('timeField');
       formikProps.setFieldTouched('interval');
@@ -201,6 +204,7 @@ export const DefineDetector = (props: DefineDetectorProps) => {
         }
       });
     }
+    // console.log("ylwudebug +++++++++ formikProps on DefineDetectorPage", formikProps);
     formikProps.setSubmitting(false);
   };
 
@@ -281,6 +285,8 @@ export const DefineDetector = (props: DefineDetectorProps) => {
                 <Timestamp formikProps={formikProps} />
                 <EuiSpacer />
                 <Settings />
+                <EuiSpacer />
+                <CustomResultIndex />
               </Fragment>
             </EuiPageBody>
           </EuiPage>

@@ -47,6 +47,7 @@ export const useFetchDetectorInfo = (
   const detector = useSelector(
     (state: AppState) => state.ad.detectors[detectorId]
   );
+  // console.log("ylwudebug, detector in useFetchDetectorInfo", detector);
   const hasError = useSelector((state: AppState) => state.ad.errorMessage);
   const isDetectorRequesting = useSelector(
     (state: AppState) => state.ad.requesting

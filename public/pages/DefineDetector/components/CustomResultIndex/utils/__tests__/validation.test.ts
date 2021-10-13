@@ -24,17 +24,19 @@
  * permissions and limitations under the License.
  */
 
-import { UIFilter } from '../../../models/interfaces';
+import chance from 'chance';
+import { validateDetectorDesc } from '../validation';
 
-// Formik values used when creating/editing the detector definition
-export interface DetectorDefinitionFormikValues {
-  name: string;
-  description: string;
-  index: { label: string }[];
-  resultIndex: string;
-  filters: UIFilter[];
-  filterQuery: string;
-  timeField: string;
-  interval: number;
-  windowDelay: number;
-}
+describe('validations', () => {
+  describe('validateDetectorDesc', () => {
+    const descriptionGenerator = new chance('seed');
+    test('should throw size limit if exceed  400', () => {
+      expect(
+        validateDetectorDesc(descriptionGenerator.paragraph({ length: 500 }))
+      ).toEqual('Description Should not exceed 400 characters');
+    });
+    test('should return undefined if not empty', () => {
+      expect(validateDetectorDesc('This is description')).toBeUndefined();
+    });
+  });
+});

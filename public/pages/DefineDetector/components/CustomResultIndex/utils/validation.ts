@@ -24,17 +24,12 @@
  * permissions and limitations under the License.
  */
 
-import { UIFilter } from '../../../models/interfaces';
-
-// Formik values used when creating/editing the detector definition
-export interface DetectorDefinitionFormikValues {
-  name: string;
-  description: string;
-  index: { label: string }[];
-  resultIndex: string;
-  filters: UIFilter[];
-  filterQuery: string;
-  timeField: string;
-  interval: number;
-  windowDelay: number;
-}
+//TODO:: Check Length, allowed characters.
+export const validateDetectorDesc = (
+  description: string
+): String | undefined => {
+  if (description.length > 400) {
+    return 'Description Should not exceed 400 characters';
+  }
+  return undefined;
+};

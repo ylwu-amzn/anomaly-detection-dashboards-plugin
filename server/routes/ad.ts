@@ -299,7 +299,7 @@ export default class AdService {
       // Combine the static and task-and-job-related fields into
       // a final response
       const finalResponse = {
-        ...staticFields,
+        ...staticFields, // this is detector config
         ...taskAndJobFields,
       };
 

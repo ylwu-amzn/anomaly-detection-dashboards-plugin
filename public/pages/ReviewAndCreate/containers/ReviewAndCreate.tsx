@@ -68,6 +68,7 @@ interface ReviewAndCreateProps extends RouteComponentProps {
 }
 
 export function ReviewAndCreate(props: ReviewAndCreateProps) {
+  // console.log("ylwudebug +++++++++ formikProps on ReviewAndCreate", props);
   const core = React.useContext(CoreServicesContext) as CoreStart;
   const dispatch = useDispatch();
   useHideSideNavBar(true, false);
