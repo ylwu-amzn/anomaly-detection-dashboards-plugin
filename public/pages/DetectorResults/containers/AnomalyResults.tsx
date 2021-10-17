@@ -244,7 +244,7 @@ export function AnomalyResults(props: AnomalyResultsProps) {
 
     try {
       const detectorResultResponse = await dispatch(
-        getDetectorResults(detectorId, params, false)
+        getDetectorResults(detectorId, params, false, detector.resultIndex)
       );
       const featuresData = get(
         detectorResultResponse,

@@ -119,6 +119,7 @@ const useAsyncRef = (value: any) => {
 };
 
 export const AnomalyHistory = (props: AnomalyHistoryProps) => {
+  // console.log("ylwudebug ----- detector is ", props);
   const dispatch = useDispatch();
   const core = React.useContext(CoreServicesContext) as CoreStart;
 
@@ -180,6 +181,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
   ) {
     try {
       setIsLoadingAnomalyResults(true);
+      console.log("lllllllllllll -----1 props.detector.resultIndex, ", props.detector.resultIndex);
       const anomalySummaryResult = await dispatch(
         searchResults(
           getAnomalySummaryQuery(
@@ -190,7 +192,8 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
             props.isHistorical,
             taskId.current,
             modelId
-          )
+          ),
+          props.detector.resultIndex
         )
       );
 
@@ -207,9 +210,11 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
             props.isHistorical,
             taskId.current,
             modelId
-          )
+          ),
+          props.detector.resultIndex
         )
       );
+      // console.log("ylwudebug result : ", result);
 
       setBucketizedAnomalyResults(parseBucketizedAnomalyResults(result));
     } catch (err) {
@@ -272,9 +277,10 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
         isHCDetector
       );
       const detectorResultResponse = props.isHistorical
-        ? await dispatch(getDetectorResults(taskId.current || '', params, true))
-        : await dispatch(getDetectorResults(props.detector.id, params, false));
+        ? await dispatch(getDetectorResults(taskId.current || '', params, true, props.detector.resultIndex))
+        : await dispatch(getDetectorResults(props.detector.id, params, false, props.detector.resultIndex));
       const rawAnomaliesData = get(detectorResultResponse, 'response', []);
+      console.log("ylwudebug: params, rawAnomaliesData", params, rawAnomaliesData);
       const rawAnomaliesResult = {
         anomalies: get(rawAnomaliesData, 'results', []),
         featureData: get(rawAnomaliesData, 'featureResults', []),
@@ -328,7 +334,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       props.isHistorical,
       taskId.current
     );
-    const result = await dispatch(searchResults(query));
+    const result = await dispatch(searchResults(query, props.detector.resultIndex));
 
     const topEntityAnomalySummaries = parseTopEntityAnomalySummaryResults(
       result,
@@ -347,7 +353,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           props.isHistorical,
           taskId.current
         );
-        return dispatch(searchResults(entityResultQuery));
+        return dispatch(searchResults(entityResultQuery, props.detector.resultIndex));
       }
     );
 
@@ -420,7 +426,8 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       getDetectorResults(
         props.isHistorical ? taskId.current : props.detector?.id,
         params,
-        props.isHistorical ? true : false
+        props.isHistorical ? true : false,
+        props.detector.resultIndex
       )
     );
 

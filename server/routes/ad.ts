@@ -87,13 +87,13 @@ export function registerADRoutes(apiRouter: Router, adService: AdService) {
   apiRouter.post('/detectors', adService.putDetector);
   apiRouter.put('/detectors/{detectorId}', adService.putDetector);
   apiRouter.post('/detectors/_search', adService.searchDetector);
-  apiRouter.post('/detectors/results/_search', adService.searchResults);
+  apiRouter.post('/detectors/results/_search/{resultIndex}', adService.searchResults);
   apiRouter.get('/detectors/{detectorId}', adService.getDetector);
   apiRouter.get('/detectors', adService.getDetectors);
   apiRouter.post('/detectors/preview', adService.previewDetector);
   apiRouter.get(
-    '/detectors/{id}/results/{isHistorical}',
-    adService.getAnomalyResults
+    '/detectors/{id}/results/{isHistorical}/{resultIndex}',
+    adService.getAnomalyResults // why need this?
   );
   apiRouter.delete('/detectors/{detectorId}', adService.deleteDetector);
   apiRouter.post('/detectors/{detectorId}/start', adService.startDetector);
@@ -479,10 +479,19 @@ export default class AdService {
     opensearchDashboardsResponse: OpenSearchDashboardsResponseFactory
   ): Promise<IOpenSearchDashboardsResponse<any>> => {
     try {
+      console.log("wwwwwwwwww request.params", request.params);
+      var { resultIndex } = request.params as { resultIndex: string };
+      console.log("wwwwwwwwww request.params resultIndex", resultIndex);
+      if(!resultIndex || !resultIndex.startsWith('test_ad')){
+        resultIndex = ''
+      }
+      console.log("wwwwwwwwww request.params resultIndex", resultIndex);
+      let requestParams = { resultIndex: resultIndex } as {};
       const requestBody = JSON.stringify(request.body);
       const response = await this.client
         .asScoped(request)
         .callAsCurrentUser('ad.searchResults', {
+          ...requestParams,
           body: requestBody,
         });
       return opensearchDashboardsResponse.ok({
@@ -589,9 +598,11 @@ export default class AdService {
 
       //Given each detector from previous result, get aggregation to power list
       const allDetectorIds = Object.keys(allDetectorsMap);
+      let requestParams = { resultIndex: 'test_ad*' } as {};
       const aggregationResult = await this.client
         .asScoped(request)
         .callAsCurrentUser('ad.searchResults', {
+          ...requestParams,
           body: getResultAggregationQuery(allDetectorIds, {
             from,
             size,
@@ -732,11 +743,21 @@ export default class AdService {
     request: OpenSearchDashboardsRequest,
     opensearchDashboardsResponse: OpenSearchDashboardsResponseFactory
   ): Promise<IOpenSearchDashboardsResponse<any>> => {
-    let { id, isHistorical } = request.params as {
+    console.log("yyyyyyyyyyyyyyyyyyyy ---------- ", request);
+    let { id, isHistorical, resultIndex } = request.params as {
       id: string;
       isHistorical: any;
+      resultIndex: string;
     };
+    console.log("yyyyyyyyyyyyyyyyyyyy isHistorical ---------- ", isHistorical);
     isHistorical = JSON.parse(isHistorical);
+    console.log("yyyyyyyyyyyyyyyyyyyy isHistorical222 ---------- ", isHistorical);
+    // resultIndex = JSON.parse(resultIndex);
+    console.log("yyyyyyyyyyyyyyyyyyyy resultIndex ---------- ", resultIndex);
+    if (!resultIndex || !resultIndex.startsWith('test_ad')) {
+      resultIndex = ''
+    }
+    console.log("yyyyyyyyyyyyyyyyyyyy222 resultIndex ---------- ", resultIndex);
 
     // Search by task id if historical, or by detector id if realtime
     const searchTerm = isHistorical ? { task_id: id } : { detector_id: id };
@@ -855,11 +876,15 @@ export default class AdService {
         console.log('wrong date range filter', error);
       }
 
+      let requestParams = { resultIndex: resultIndex } as {};
+      console.log("yyyyyyyywwwwwwww ---- requestParams", requestParams);
       const response = await this.client
         .asScoped(request)
         .callAsCurrentUser('ad.searchResults', {
+          ...requestParams,
           body: requestBody,
         });
+      console.log("yyyyyyyywwwwwwww22 ---- response", response);
 
       const totalResults: number = get(response, 'hits.total.value', 0);
 

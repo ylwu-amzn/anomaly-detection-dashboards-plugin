@@ -83,7 +83,8 @@ export const AnomaliesDistributionChart = (
       timeRange,
       dispatch,
       0,
-      false
+      false,
+      "test_ad*"
     );
     setAnomalyDistribution(distributionResult);
 

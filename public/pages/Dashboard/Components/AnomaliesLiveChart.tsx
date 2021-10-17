@@ -115,7 +115,8 @@ export const AnomaliesLiveChart = (props: AnomaliesLiveChartProps) => {
         dispatch,
         -1,
         1,
-        true
+        true,
+        'test_ad*'
       );
     } catch (err) {
       console.log(
@@ -136,7 +137,8 @@ export const AnomaliesLiveChart = (props: AnomaliesLiveChartProps) => {
       0,
       MAX_ANOMALIES,
       MAX_LIVE_DETECTORS,
-      false
+      false,
+      'test_ad*'
     );
 
     setLiveAnomalyData(latestLiveAnomalyResult);
