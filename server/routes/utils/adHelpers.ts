@@ -39,6 +39,7 @@ import {
   SORT_DIRECTION,
   REALTIME_TASK_TYPES,
   HISTORICAL_TASK_TYPES,
+  CUSTOM_AD_RESULT_INDEX_PREFIX,
 } from '../../utils/constants';
 import { InitProgress } from '../../models/interfaces';
 import { MAX_DETECTORS } from '../../utils/constants';
@@ -593,3 +594,12 @@ export const getLatestTaskForDetectorQuery = (
     },
   };
 };
+
+export const getRestulIndex = (
+  resultIndex: string
+) => {
+  if (!resultIndex || !resultIndex.startsWith('')) {
+    return '';
+  }
+  return resultIndex;
+}

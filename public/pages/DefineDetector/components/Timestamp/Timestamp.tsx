@@ -48,6 +48,8 @@ export function Timestamp(props: TimestampProps) {
   const isRemoteIndex = selectedIndex.includes(':');
   const [queryText, setQueryText] = useState('');
 
+  console.log('ylwudebuggggg ---- formik value:', props.formikProps);
+
   const handleSearchChange = debounce(async (searchValue: string) => {
     if (searchValue !== queryText) {
       const sanitizedQuery = sanitizeSearchText(searchValue);

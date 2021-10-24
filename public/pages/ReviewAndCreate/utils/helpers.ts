@@ -47,11 +47,15 @@ export function formikToDetector(values: CreateDetectorFormikValues): Detector {
         endTime: convertTimestampToNumber(values.endTime),
       }
     : undefined;
+    var resultIndex = values.resultIndex;
+    if (resultIndex && resultIndex.trim().length > 0) {
+      resultIndex = "anomaly-result-" + resultIndex;
+    }
   let detectorBody = {
     name: values.name,
     description: values.description,
     indices: formikToIndices(values.index),
-    resultIndex: values.resultIndex,
+    resultIndex: resultIndex,
     filterQuery: formikToFilterQuery(values),
     uiMetadata: {
       features: { ...featuresToUIMetadata(values.featureList) },

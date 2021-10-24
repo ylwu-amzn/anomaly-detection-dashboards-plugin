@@ -39,6 +39,7 @@ import {
   SORT_DIRECTION,
   AD_DOC_FIELDS,
   DETECTOR_STATE,
+  CUSTOM_AD_RESULT_INDEX_PREFIX
 } from '../utils/constants';
 import {
   mapKeysDeep,
@@ -67,6 +68,7 @@ import {
   convertStaticFieldsToCamelCase,
   getLatestTaskForDetectorQuery,
   convertTaskAndJobFieldsToCamelCase,
+  getRestulIndex,
 } from './utils/adHelpers';
 import { isNumber, set } from 'lodash';
 import {
@@ -88,11 +90,16 @@ export function registerADRoutes(apiRouter: Router, adService: AdService) {
   apiRouter.put('/detectors/{detectorId}', adService.putDetector);
   apiRouter.post('/detectors/_search', adService.searchDetector);
   apiRouter.post('/detectors/results/_search/{resultIndex}', adService.searchResults);
+  apiRouter.post('/detectors/results/_search/', adService.searchResults);
   apiRouter.get('/detectors/{detectorId}', adService.getDetector);
   apiRouter.get('/detectors', adService.getDetectors);
   apiRouter.post('/detectors/preview', adService.previewDetector);
   apiRouter.get(
     '/detectors/{id}/results/{isHistorical}/{resultIndex}',
+    adService.getAnomalyResults // why need this?
+  );
+   apiRouter.get(
+    '/detectors/{id}/results/{isHistorical}',
     adService.getAnomalyResults // why need this?
   );
   apiRouter.delete('/detectors/{detectorId}', adService.deleteDetector);
@@ -482,10 +489,10 @@ export default class AdService {
       console.log("wwwwwwwwww request.params", request.params);
       var { resultIndex } = request.params as { resultIndex: string };
       console.log("wwwwwwwwww request.params resultIndex", resultIndex);
-      if(!resultIndex || !resultIndex.startsWith('test_ad')){
+      if(!resultIndex || !resultIndex.startsWith(CUSTOM_AD_RESULT_INDEX_PREFIX)){
         resultIndex = ''
       }
-      console.log("wwwwwwwwww request.params resultIndex", resultIndex);
+      console.log("wwwwwwwwww request.params resultIndex", getRestulIndex(resultIndex));
       let requestParams = { resultIndex: resultIndex } as {};
       const requestBody = JSON.stringify(request.body);
       const response = await this.client
@@ -598,7 +605,7 @@ export default class AdService {
 
       //Given each detector from previous result, get aggregation to power list
       const allDetectorIds = Object.keys(allDetectorsMap);
-      let requestParams = { resultIndex: 'test_ad*' } as {};
+      let requestParams = { resultIndex: CUSTOM_AD_RESULT_INDEX_PREFIX + '*' } as {};
       const aggregationResult = await this.client
         .asScoped(request)
         .callAsCurrentUser('ad.searchResults', {
@@ -749,15 +756,15 @@ export default class AdService {
       isHistorical: any;
       resultIndex: string;
     };
+    if(!resultIndex || !resultIndex.startsWith(CUSTOM_AD_RESULT_INDEX_PREFIX)){
+      resultIndex = ''
+    }
     console.log("yyyyyyyyyyyyyyyyyyyy isHistorical ---------- ", isHistorical);
     isHistorical = JSON.parse(isHistorical);
     console.log("yyyyyyyyyyyyyyyyyyyy isHistorical222 ---------- ", isHistorical);
     // resultIndex = JSON.parse(resultIndex);
     console.log("yyyyyyyyyyyyyyyyyyyy resultIndex ---------- ", resultIndex);
-    if (!resultIndex || !resultIndex.startsWith('test_ad')) {
-      resultIndex = ''
-    }
-    console.log("yyyyyyyyyyyyyyyyyyyy222 resultIndex ---------- ", resultIndex);
+    console.log("yyyyyyyyyyyyyyyyyyyy222 resultIndex ---------- ", getRestulIndex(resultIndex));
 
     // Search by task id if historical, or by detector id if realtime
     const searchTerm = isHistorical ? { task_id: id } : { detector_id: id };

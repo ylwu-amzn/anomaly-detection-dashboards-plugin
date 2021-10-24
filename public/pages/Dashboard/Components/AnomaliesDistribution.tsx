@@ -45,7 +45,7 @@ import { Datum } from '@elastic/charts';
 import React from 'react';
 import { TIME_RANGE_OPTIONS } from '../../Dashboard/utils/constants';
 import { get, isEmpty } from 'lodash';
-import { AD_DOC_FIELDS } from '../../../../server/utils/constants';
+import { AD_DOC_FIELDS, CUSTOM_AD_RESULT_INDEX_PREFIX } from '../../../../server/utils/constants';
 import { searchResults } from '../../../redux/reducers/anomalyResults';
 export interface AnomaliesDistributionChartProps {
   selectedDetectors: DetectorListItem[];
@@ -84,7 +84,7 @@ export const AnomaliesDistributionChart = (
       dispatch,
       0,
       false,
-      "test_ad*"
+      CUSTOM_AD_RESULT_INDEX_PREFIX + '*'
     );
     setAnomalyDistribution(distributionResult);
 

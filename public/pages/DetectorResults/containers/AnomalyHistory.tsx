@@ -181,7 +181,8 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
   ) {
     try {
       setIsLoadingAnomalyResults(true);
-      console.log("lllllllllllll -----1 props.detector.resultIndex, ", props.detector.resultIndex);
+      const resultIndex = get(props, 'detector.resultIndex', '');
+      console.log("ylwudebuggg4, -------- resultl index : ", resultIndex);
       const anomalySummaryResult = await dispatch(
         searchResults(
           getAnomalySummaryQuery(
@@ -193,7 +194,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
             taskId.current,
             modelId
           ),
-          props.detector.resultIndex
+          resultIndex
         )
       );
 
@@ -211,7 +212,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
             taskId.current,
             modelId
           ),
-          props.detector.resultIndex
+          resultIndex
         )
       );
       // console.log("ylwudebug result : ", result);
@@ -276,9 +277,11 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
         // get anomaly only data if HC detector
         isHCDetector
       );
+      const resultIndex = get(props, 'detector.resultIndex', '');
+      console.log("ylwudebuggg10, ---------- result index", resultIndex);
       const detectorResultResponse = props.isHistorical
-        ? await dispatch(getDetectorResults(taskId.current || '', params, true, props.detector.resultIndex))
-        : await dispatch(getDetectorResults(props.detector.id, params, false, props.detector.resultIndex));
+        ? await dispatch(getDetectorResults(taskId.current || '', params, true, resultIndex))
+        : await dispatch(getDetectorResults(props.detector.id, params, false, resultIndex));
       const rawAnomaliesData = get(detectorResultResponse, 'response', []);
       console.log("ylwudebug: params, rawAnomaliesData", params, rawAnomaliesData);
       const rawAnomaliesResult = {
@@ -334,7 +337,9 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       props.isHistorical,
       taskId.current
     );
-    const result = await dispatch(searchResults(query, props.detector.resultIndex));
+    const resultIndex = get(props, 'detector.resultIndex', '');
+    console.log("ylwudebuggg5, -------- resultl index : ", resultIndex);
+    const result = await dispatch(searchResults(query, resultIndex));
 
     const topEntityAnomalySummaries = parseTopEntityAnomalySummaryResults(
       result,
@@ -353,7 +358,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           props.isHistorical,
           taskId.current
         );
-        return dispatch(searchResults(entityResultQuery, props.detector.resultIndex));
+        return dispatch(searchResults(entityResultQuery, resultIndex));
       }
     );
 
@@ -422,12 +427,14 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       heatmapCell.entityList
     );
 
+    const resultIndex = get(props, 'detector.resultIndex', '');
+    console.log("ylwudebuggg9, ------ result index ", resultIndex);
     const entityAnomalyResultResponse = await dispatch(
       getDetectorResults(
         props.isHistorical ? taskId.current : props.detector?.id,
         params,
         props.isHistorical ? true : false,
-        props.detector.resultIndex
+        resultIndex
       )
     );
 

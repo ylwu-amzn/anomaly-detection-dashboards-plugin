@@ -103,6 +103,7 @@ export const getDetectorResults = (
     }),
 });
 
+//ylwu check why result index not passed in
 export const searchResults = (
   requestBody: any,
   resultIndex: string,

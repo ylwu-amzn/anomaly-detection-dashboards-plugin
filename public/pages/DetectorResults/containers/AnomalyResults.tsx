@@ -243,8 +243,10 @@ export function AnomalyResults(props: AnomalyResultsProps) {
     );
 
     try {
+      const resultIndex = get(detector, 'resultIndex', '');
+      console.log("ylwudebuggg7 ----- result index", resultIndex);
       const detectorResultResponse = await dispatch(
-        getDetectorResults(detectorId, params, false, detector.resultIndex)
+        getDetectorResults(detectorId, params, false, resultIndex)
       );
       const featuresData = get(
         detectorResultResponse,

@@ -28,7 +28,6 @@ import { API } from '../../utils/constants';
 
 export default function adPlugin(Client: any, config: any, components: any) {
   const ca = components.clientAction.factory;
-  console.log("yyyyyyyyyy ", ca);
 
   Client.prototype.ad = components.clientAction.namespaceFactory();
   const ad = Client.prototype.ad.prototype;
@@ -106,6 +105,7 @@ export default function adPlugin(Client: any, config: any, components: any) {
     },
     method: 'GET',
   });
+
   ad.searchResults = ca({
     url: {
       fmt: `${API.DETECTOR_BASE}/results/_search/<%=resultIndex%>`,
@@ -115,6 +115,14 @@ export default function adPlugin(Client: any, config: any, components: any) {
           required: false,
         },
       },
+    },
+    needBody: true,
+    method: 'POST',
+  });
+
+  ad.searchResults = ca({
+    url: {
+      fmt: `${API.DETECTOR_BASE}/results/_search/`,
     },
     needBody: true,
     method: 'POST',

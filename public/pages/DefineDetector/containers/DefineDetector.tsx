@@ -105,6 +105,7 @@ export const DefineDetector = (props: DefineDetectorProps) => {
     undefined
   ) as FILTER_TYPES;
   const oldFilterQuery = get(detector, 'filterQuery', undefined);
+  const resultIndex = get(detector, 'resultIndex', undefined);
 
   // Jump to top of page on first load
   useEffect(() => {
@@ -286,7 +287,7 @@ export const DefineDetector = (props: DefineDetectorProps) => {
                 <EuiSpacer />
                 <Settings />
                 <EuiSpacer />
-                <CustomResultIndex />
+                <CustomResultIndex isEdit={props.isEdit} resultIndex={get(formikProps, 'values.resultIndex')}/>
               </Fragment>
             </EuiPageBody>
           </EuiPage>

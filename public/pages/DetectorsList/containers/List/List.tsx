@@ -191,6 +191,7 @@ export const DetectorList = (props: ListProps) => {
       !errorGettingDetectors.includes(SINGLE_DETECTOR_NOT_FOUND_MSG)
     ) {
       console.error(errorGettingDetectors);
+      console.log("gggggggggg ---- ", errorGettingDetectors);
       core.notifications.toasts.addDanger(
         typeof errorGettingDetectors === 'string' &&
           errorGettingDetectors.includes(NO_PERMISSIONS_KEY_WORD)

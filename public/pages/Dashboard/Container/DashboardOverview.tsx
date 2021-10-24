@@ -184,6 +184,7 @@ export function DashboardOverview() {
   useEffect(() => {
     if (errorGettingDetectors) {
       console.error(errorGettingDetectors);
+      console.log("gggggggggg22222222 ---- ", errorGettingDetectors);
       core.notifications.toasts.addDanger(
         typeof errorGettingDetectors === 'string' &&
           errorGettingDetectors.includes(NO_PERMISSIONS_KEY_WORD)

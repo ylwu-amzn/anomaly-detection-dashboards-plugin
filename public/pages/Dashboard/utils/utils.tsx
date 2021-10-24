@@ -655,7 +655,7 @@ export const getAnomalyDistributionForDetectorsByTimeRange = async (
   };
   const finalQuery = Object.assign({}, getResultQuery, anomaly_dist_aggs);
 
-  console.log("lllllllllllll -----2 resultIndex, ", resultIndex);
+  console.log("ylwudebuggg6, ---------- result index: ", resultIndex);
   const result = await dispatch(func(finalQuery, resultIndex));
 
   const detectorsAggResults = get(
