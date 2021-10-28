@@ -99,4 +99,4 @@ export enum MISSING_FEATURE_DATA_SEVERITY {
 
 export const SPACE_STR = ' ';
 
-export const CUSTOM_AD_RESULT_INDEX_PREFIX = 'anomaly-result-';
+export const CUSTOM_AD_RESULT_INDEX_PREFIX = 'opensearch-ad-plugin-result-';

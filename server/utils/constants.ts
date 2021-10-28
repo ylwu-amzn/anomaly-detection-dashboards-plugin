@@ -126,4 +126,4 @@ export const HISTORICAL_TASK_TYPES = [
   'HISTORICAL',
 ];
 
-export const CUSTOM_AD_RESULT_INDEX_PREFIX = 'anomaly-result-';
+export const CUSTOM_AD_RESULT_INDEX_PREFIX = 'opensearch-ad-plugin-result-';

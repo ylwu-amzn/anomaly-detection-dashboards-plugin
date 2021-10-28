@@ -94,7 +94,7 @@ function CustomResultIndex(props: CustomResultIndexProps) {
         <EuiFlexItem>
         <EuiCallOut
           data-test-subj="cannotEditResultIndexCallout"
-          title="You can't change the result index after you create the detector. Make sure that you select a proper index name."
+          title="You can't change the result index after you create the detector. You can manage the index lifecycle with ISM plugin."
           color="warning"
           iconType="alert"
           size="s"
@@ -107,13 +107,13 @@ function CustomResultIndex(props: CustomResultIndexProps) {
           <FormattedFormRow
             title="Result index field"
             hint='Specify a unique and descriptive name that is easy to
-          recognize. Prefix "anomaly-result-" will be added to the index name you input. For example, 
-          if you input "abc" as result index name, the final index name will be "anomaly-result-abc"'
+          recognize. Prefix "opensearch-ad-plugin-result-" will be added to the index name you input. For example, 
+          if you input "abc" as result index name, the final index name will be "opensearch-ad-plugin-result-abc"'
           >
             <EuiFieldText
               id="resultIndex"
               placeholder="Enter result index name"
-              prepend="anomaly-result-"
+              prepend={props.isEdit? "" : "opensearch-ad-plugin-result-"}
               disabled={props.isEdit}
               {...field}
             />

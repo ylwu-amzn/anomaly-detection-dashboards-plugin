@@ -49,7 +49,7 @@ export function formikToDetector(values: CreateDetectorFormikValues): Detector {
     : undefined;
     var resultIndex = values.resultIndex;
     if (resultIndex && resultIndex.trim().length > 0) {
-      resultIndex = "anomaly-result-" + resultIndex;
+      resultIndex = "opensearch-ad-plugin-result-" + resultIndex;
     }
   let detectorBody = {
     name: values.name,

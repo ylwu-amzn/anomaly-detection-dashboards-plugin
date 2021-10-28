@@ -132,18 +132,21 @@ export const AnomalyResultsLiveChart = (
   ]);
 
   useEffect(() => {
+    const resultIndex = get(props, 'detector.resultIndex', '');
+    console.log('yyyyy1111122222 ', resultIndex);
     async function loadLiveAnomalyResults(
       dispatch: Dispatch<any>,
       detectorId: string,
       detectionInterval: number,
-      intervals: number
+      intervals: number,
+      resultIndex: string,
     ) {
       try {
         const queryParams = getQueryParamsForLiveAnomalyResults(
           detectionInterval,
           intervals
         );
-        await dispatch(getDetectorLiveResults(detectorId, queryParams, false));
+        await dispatch(getDetectorLiveResults(detectorId, queryParams, false, resultIndex));//ylwu: query from custom result idnex 
       } catch (err) {
         console.error(
           `Failed to get live anomaly result for detector ${detectorId}`,
@@ -159,16 +162,20 @@ export const AnomalyResultsLiveChart = (
         dispatch,
         props.detector.id,
         detectionInterval,
-        LIVE_CHART_CONFIG.MONITORING_INTERVALS
+        LIVE_CHART_CONFIG.MONITORING_INTERVALS,
+        resultIndex
       );
       const intervalId = setInterval(
-        () =>
+        () => {
+          console.log('yyyyy1111122222333333, resultIndexaaaa, ', get(props, 'detector.resultIndex', ''));
           getLiveAnomalyResults(
             dispatch,
             props.detector.id,
             detectionInterval,
-            LIVE_CHART_CONFIG.MONITORING_INTERVALS
-          ),
+            LIVE_CHART_CONFIG.MONITORING_INTERVALS,
+            resultIndex
+          )
+        },
         LIVE_CHART_CONFIG.REFRESH_INTERVAL_IN_SECONDS
       );
       return () => {
