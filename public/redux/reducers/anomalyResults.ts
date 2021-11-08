@@ -111,25 +111,54 @@ export const getDetectorResults = (
   id: string,
   queryParams: any,
   isHistorical: boolean,
-  resultIndex: string
-): APIAction => ({
+  resultIndex: string,
+  onlyQueryCustomResultIndex: boolean,
+): APIAction => !resultIndex ?
+
+ ({
   type: DETECTOR_RESULTS,
   request: (client: HttpSetup) =>
     client.get(
-      `..${AD_NODE_API.DETECTOR}/${id}/results/${isHistorical}/${resultIndex}`,
+      `..${AD_NODE_API.DETECTOR}/${id}/results/${isHistorical}`,
+      {
+        query: queryParams,
+      }
+    ),
+}) : ({
+  type: DETECTOR_RESULTS,
+  request: (client: HttpSetup) =>
+    client.get(
+      `..${AD_NODE_API.DETECTOR}/${id}/results/${isHistorical}/${resultIndex}/${onlyQueryCustomResultIndex}`,
       {
         query: queryParams,
       }
     ),
 });
 
+// export const searchResults = (
+//   requestBody: any,
+// ): APIAction => ({
+//   type: SEARCH_ANOMALY_RESULTS,
+//   request: (client: HttpSetup) =>
+//     client.post(`..${AD_NODE_API.DETECTOR}/results/_search`, {
+//       body: JSON.stringify(requestBody),
+//     }),
+// });
+
 export const searchResults = (
   requestBody: any,
-  resultIndex: string
-): APIAction => ({
+  resultIndex: string,
+  onlyQueryCustomResultIndex: boolean,
+): APIAction => !resultIndex? ({
   type: SEARCH_ANOMALY_RESULTS,
   request: (client: HttpSetup) =>
-    client.post(`..${AD_NODE_API.DETECTOR}/results/_search/${resultIndex}`, {
+    client.post(`..${AD_NODE_API.DETECTOR}/results/_search`, {
+      body: JSON.stringify(requestBody),
+    }),
+}) : ({
+  type: SEARCH_ANOMALY_RESULTS,
+  request: (client: HttpSetup) =>
+    client.post(`..${AD_NODE_API.DETECTOR}/results/_search/${resultIndex}/${onlyQueryCustomResultIndex}`, {
       body: JSON.stringify(requestBody),
     }),
 });

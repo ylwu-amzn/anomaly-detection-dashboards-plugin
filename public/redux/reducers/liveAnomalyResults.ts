@@ -74,12 +74,22 @@ export const getDetectorLiveResults = (
   detectorId: string,
   queryParams: DetectorResultsQueryParams,
   isHistorical: boolean,
-  resultIndex: string
-): APIAction => ({
+  resultIndex: string,
+  onlyQueryCustomResultIndex: boolean,
+): APIAction => !resultIndex? ({
   type: DETECTOR_LIVE_RESULTS,
   request: (client: HttpSetup) =>
     client.get(
-      `..${AD_NODE_API.DETECTOR}/${detectorId}/results/${isHistorical}/${resultIndex}`,
+      `..${AD_NODE_API.DETECTOR}/${detectorId}/results/${isHistorical}`,
+      {
+        query: queryParams,
+      }
+    ),
+}) : ({
+  type: DETECTOR_LIVE_RESULTS,
+  request: (client: HttpSetup) =>
+    client.get(
+      `..${AD_NODE_API.DETECTOR}/${detectorId}/results/${isHistorical}/${resultIndex}/${onlyQueryCustomResultIndex}`,
       {
         query: queryParams,
       }

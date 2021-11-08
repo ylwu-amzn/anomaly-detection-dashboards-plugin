@@ -32,7 +32,7 @@ import React, {
   useRef,
 } from 'react';
 
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, stubTrue } from 'lodash';
 import {
   EuiFlexItem,
   EuiFlexGroup,
@@ -238,7 +238,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
                   taskId.current,
                   modelId
                 );
-                return dispatch(searchResults(params, resultIndex));
+                return dispatch(searchResults(params, resultIndex, true));
               })
             : [];
 
@@ -257,20 +257,16 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           allPureAnomalies.push(parsePureAnomalies(anomalySummaryResponse));
         });
       } else if (!isHCDetector) {
-        const anomalySummaryResponse = await dispatch(
-          searchResults(
-            getAnomalySummaryQuery(
-              dateRange.startDate,
-              dateRange.endDate,
-              props.detector.id,
-              undefined,
-              props.isHistorical,
-              taskId.current,
-              modelId
-            ),
-            resultIndex
-          )
+        const anomalySummaryQuery = getAnomalySummaryQuery(
+          dateRange.startDate,
+          dateRange.endDate,
+          props.detector.id,
+          undefined,
+          props.isHistorical,
+          taskId.current,
+          modelId
         );
+        const anomalySummaryResponse = await dispatch(searchResults(anomalySummaryQuery,resultIndex,true));
         allPureAnomalies.push(parsePureAnomalies(anomalySummaryResponse));
       }
 
@@ -292,7 +288,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
               taskId.current,
               modelId
             );
-            return dispatch(searchResults(params, resultIndex));
+            return dispatch(searchResults(params, resultIndex, true));
           }
         );
 
@@ -315,20 +311,16 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           }
         );
       } else if (!isHCDetector) {
-        const bucketizedAnomalyResultResponse = await dispatch(
-          searchResults(
-            getBucketizedAnomalyResultsQuery(
-              dateRange.startDate,
-              dateRange.endDate,
-              props.detector.id,
-              undefined,
-              props.isHistorical,
-              taskId.current,
-              modelId
-            ),
-            resultIndex
-          )
+        const bucketizedAnomalyResultsQuery = getBucketizedAnomalyResultsQuery(
+          dateRange.startDate,
+          dateRange.endDate,
+          props.detector.id,
+          undefined,
+          props.isHistorical,
+          taskId.current,
+          modelId
         );
+        const bucketizedAnomalyResultResponse = await dispatch(searchResults(bucketizedAnomalyResultsQuery, resultIndex, true));
         allBucketizedAnomalyResults.push(
           parseBucketizedAnomalyResults(bucketizedAnomalyResultResponse)
         );
@@ -424,10 +416,10 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       );
       const detectorResultResponse = props.isHistorical
         ? await dispatch(
-            getDetectorResults(taskId.current || '', params, true, resultIndex)
+            getDetectorResults(taskId.current || '', params, true, resultIndex, true)
           )
         : await dispatch(
-            getDetectorResults(props.detector.id, params, false, resultIndex)
+            getDetectorResults(props.detector.id, params, false, resultIndex, true)
           );
       const rawAnomaliesData = get(detectorResultResponse, 'response', []);
       const rawAnomaliesResult = {
@@ -547,7 +539,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
         props.isHistorical,
         taskId.current
       );
-      const result = await dispatch(searchResults(query, resultIndex));
+      const result = await dispatch(searchResults(query, resultIndex, true));
       topEntityAnomalySummaries = parseTopEntityAnomalySummaryResults(
         result,
         isMultiCategory
@@ -566,7 +558,7 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           props.isHistorical,
           taskId.current
         );
-        return dispatch(searchResults(entityResultQuery, resultIndex));
+        return dispatch(searchResults(entityResultQuery, resultIndex, true));
       }
     );
 
@@ -639,7 +631,8 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
           props.isHistorical ? taskId.current : props.detector?.id,
           params,
           props.isHistorical ? true : false,
-          resultIndex
+          resultIndex,
+          true
         )
       );
     });
@@ -721,7 +714,8 @@ export const AnomalyHistory = (props: AnomalyHistoryProps) => {
       taskId.current,
       heatmapCell.entityList
     );
-    const result = await dispatch(searchResults(query, resultIndex));
+    
+    const result = await dispatch(searchResults(query, resultIndex, true));
 
     // Gets top child entities as an Entity[][],
     // where each entry in the array is a unique combination of entity values
